@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Online Test - Sistus Pvt Ltd</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #000;
+      color: #fff;
+    }
+
+    .login, .instructions, .quiz-container {
+      display: none;
+      padding: 30px;
+      max-width: 800px;
+      margin: 50px auto;
+      border-radius: 8px;
+      background-color: #1a1a1a;
+      box-shadow: 0 0 10px rgba(0,255,0,0.2);
+    }
+
+    .active {
+      display: block;
+    }
+
+    h2 {
+      color: orange;
+    }
+
+    input[type="text"], input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0 20px;
+      border: none;
+      border-radius: 5px;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: orange;
+      color: black;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    .question {
+      margin-bottom: 20px;
+      background-color: #111;
+      padding: 15px;
+      border-left: 4px solid limegreen;
+      border-radius: 5px;
+    }
+
+    .question h4 {
+      color: limegreen;
+    }
+
+    .question label {
+      display: block;
+      margin: 5px 0;
+    }
+
+    #timer {
+      text-align: right;
+      font-size: 18px;
+      margin-bottom: 20px;
+      color: #ffcc00;
+    }
+
+    .logo {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.logo span {
+  color: orange;
+  font-size: 24px;
+  font-weight: bold;
+  display: block;
+}
+
+.logo-icon {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 10px;
+}
+
+.ring {
+  width: 60px;
+  height: 60px;
+  border: 4px solid orange;
+  border-radius: 50%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.ring1 {
+  transform: rotate(20deg);
+}
+
+.ring2 {
+  transform: rotate(-20deg);
+  left: 10px;
+  top: 10px;
+}
+
+  </style>
+</head>
+<body>
+
+<div class="logo">
+  <div class="logo-icon">
+    <div class="ring ring1"></div>
+    <div class="ring ring2"></div>
+  </div>
+  <span>Sistus Pvt Ltd</span>
+</div>
+
+
+<!-- Login Page -->
+<div class="login active" id="loginPage">
+  <h2>Login</h2>
+  <input type="text" id="username" placeholder="User ID">
+  <input type="password" id="password" placeholder="Password">
+  <button onclick="login()">Login</button>
+</div>
+
+<!-- Instructions Page -->
+<div class="instructions" id="instructionsPage">
+  <h2>Instructions</h2>
+  <ul>
+    <li>Total Questions: 30</li>
+    <li>Time Limit: 30 Minutes</li>
+    <li>You can only submit once</li>
+    <li>Auto submission when time ends</li>
+  </ul>
+  <button onclick="startQuiz()">Start Test</button>
+</div>
+
+<!-- Quiz Page -->
+<div class="quiz-container" id="quizPage">
+  <form id="quizForm" action="https://formsubmit.co/gnana99011@gmail.com" method="POST">
+    <input type="hidden" name="_subject" value="Test Submission">
+    <input type="hidden" name="_captcha" value="false">
+    <input type="hidden" name="User ID" id="userIdField">
+    <div id="timer">Time Remaining: <span id="time">30:00</span></div>
+
+    <div id="questionsContainer"></div>
+
+    <button type="submit" id="submitBtn">Submit</button>
+  </form>
+</div>
+
+<script>
+  const users = {
+    "gnana": "6303",
+    "samiullah_khan09": "7893385202"
+  };
+
+  function login() {
+  const user = document.getElementById("username").value;
+  const pass = document.getElementById("password").value;
+
+  if (users[user] === pass) {
+    // Set user ID into hidden field
+    document.getElementById("userIdField").value = user;
+
+    // Proceed to instructions page
+    document.getElementById("loginPage").classList.remove("active");
+    document.getElementById("instructionsPage").classList.add("active");
+  } else {
+    alert("Invalid credentials");
+  }
+}
+
+
+  const questions = [
+    { q: "What is the next number in the sequence: 2, 4, 8, 16, ?", options: ["20", "32", "24", "18"], ans: "32" },
+    { q: "Which word does not belong: Apple, Banana, Carrot, Mango?", options: ["Apple", "Banana", "Carrot", "Mango"], ans: "Carrot" },
+    { q: "If CAT = 3120, then DOG = ?", options: ["4157", "4177", "3160", "4277"], ans: "4177" },
+    { q: "If 5x + 3 = 18, then x = ?", options: ["2", "3", "4", "5"], ans: "3" },
+    { q: "A clock shows 3:15. What is the angle between the hands?", options: ["0°", "7.5°", "15°", "30°"], ans: "7.5°" },
+    { q: "Which one is odd: 2, 3, 5, 9, 11", options: ["2", "3", "9", "11"], ans: "9" },
+    { q: "If 2A = 3B and B = 4C, then A:C = ?", options: ["3:8", "8:3", "2:3", "3:2"], ans: "3:8" },
+    { q: "What comes next: Z, X, V, T, ?", options: ["S", "R", "Q", "P"], ans: "R" },
+    { q: "Which shape is different: Circle, Triangle, Rectangle, Sphere?", options: ["Circle", "Triangle", "Sphere", "Rectangle"], ans: "Sphere" },
+    { q: "Simplify: (3x - 2)(x + 4)", options: ["3x² + 10x - 8", "3x² - 2x + 4", "3x² + 10x + 8", "3x² + 12x - 8"], ans: "3x² + 10x - 8" },
+
+    { q: "What is 15% of 200?", options: ["25", "30", "35", "40"], ans: "30" },
+    { q: "Find the missing term: 3, 6, 11, 18, ?", options: ["27", "26", "28", "29"], ans: "27" },
+    { q: "Which number is a perfect square: 50, 64, 45, 91?", options: ["50", "64", "45", "91"], ans: "64" },
+    { q: "A train travels 60 km in 1.5 hours. What is its speed?", options: ["30", "40", "45", "50"], ans: "40" },
+    { q: "What is the odd one out: January, February, March, Sunday?", options: ["January", "February", "March", "Sunday"], ans: "Sunday" },
+    { q: "If 9 + 3 = 27, 8 + 4 = 48, then 7 + 5 = ?", options: ["60", "72", "35", "84"], ans: "60" },
+    { q: "Which number replaces the question mark: 2, 6, 12, 20, ?", options: ["30", "28", "32", "24"], ans: "30" },
+    { q: "If ALL = 123 and DOG = 4157, then GOD = ?", options: ["7514", "7415", "7451", "7154"], ans: "7514" },
+    { q: "If A = 1, B = 2, ..., Z = 26, then SUM = ?", options: ["60", "54", "58", "53"], ans: "60" },
+    { q: "Which direction is opposite to South-West?", options: ["North-East", "South-East", "North-West", "South"], ans: "North-East" },
+
+    { q: "If John's age is twice that of Mary and the sum of their ages is 36, what is John's age?", options: ["24", "12", "18", "20"], ans: "24" },
+    { q: "Find the next number: 121, 144, 169, ?", options: ["196", "189", "200", "185"], ans: "196" },
+    { q: "Which one is a prime number: 39, 51, 53, 55?", options: ["39", "51", "53", "55"], ans: "53" },
+    { q: "Which pair is related: Bird:Fly :: Fish:?", options: ["Swim", "Jump", "Run", "Walk"], ans: "Swim" },
+    { q: "If 2 pencils cost 8 rupees, what is the cost of 5 pencils?", options: ["18", "20", "22", "24"], ans: "20" },
+    { q: "Which number is missing: 5, 10, ?, 40, 65", options: ["15", "20", "25", "30"], ans: "25" },
+    { q: "What comes next: A, C, F, J, O, ?", options: ["U", "T", "S", "V"], ans: "U" },
+    { q: "Find the odd one out: 8, 27, 64, 100, 125", options: ["27", "64", "100", "125"], ans: "100" },
+    { q: "If 3x + 2 = 17, then x = ?", options: ["5", "6", "4", "3"], ans: "5" },
+    { q: "In a code, MONKEY is written as NPMJFZ. How is TIGER written?", options: ["UJHFS", "UJHFT", "UHJFS", "UJIFS"], ans: "UJHFS" }
+];
+
+
+  function startQuiz() {
+    document.getElementById("instructionsPage").classList.remove("active");
+    document.getElementById("quizPage").classList.add("active");
+
+    const container = document.getElementById("questionsContainer");
+    questions.forEach((q, i) => {
+      const div = document.createElement("div");
+      div.classList.add("question");
+      div.innerHTML = `<h4>Q${i+1}. ${q.q}</h4>` +
+        q.options.map(opt => `
+          <label>
+            <input type="radio" name="q${i+1}" value="${opt}" required> ${opt}
+          </label>
+        `).join('');
+      container.appendChild(div);
+    });
+
+    startTimer(30 * 60);
+  }
+
+  let submitted = false;
+
+  document.getElementById("quizForm").addEventListener("submit", function(e) {
+    if (submitted) {
+      e.preventDefault();
+      alert("You have already submitted!");
+    } else {
+      submitted = true;
+      alert("Test submitted successfully.");
+    }
+  });
+
+  function startTimer(duration) {
+    let time = duration;
+    const timerDisplay = document.getElementById("time");
+    const interval = setInterval(() => {
+      let mins = Math.floor(time / 60);
+      let secs = time % 60;
+      timerDisplay.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+      if (--time < 0) {
+        clearInterval(interval);
+        document.getElementById("quizForm").submit();
+      }
+    }, 1000);
+  }
+</script>
+
+</body>
+</html>
